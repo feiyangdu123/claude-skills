@@ -1,0 +1,545 @@
+{
+  "tools": [
+    {
+      "name": "web_search",
+      "purpose": "在指定主题上执行网页搜索，并支持可定制的过滤条件与结果数量限制",
+      "category": "search",
+      "inputs": [
+        {
+          "name": "query",
+          "type": "string",
+          "description": "用于查找相关信息的搜索查询字符串",
+          "required": true,
+          "min_length": 1,
+          "max_length": 500,
+          "examples": ["人工智能趋势", "气候变化影响", "Python 编程教程"]
+        },
+        {
+          "name": "limit",
+          "type": "integer",
+          "description": "返回的最大搜索结果数量",
+          "required": false,
+          "default": 10,
+          "minimum": 1,
+          "maximum": 100
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "搜索结果的语言代码",
+          "required": false,
+          "default": "en",
+          "enum": ["en", "es", "fr", "de", "it", "pt", "zh", "ja"]
+        },
+        {
+          "name": "time_range",
+          "type": "string",
+          "description": "搜索结果的时间范围过滤条件",
+          "required": false,
+          "enum": ["any", "day", "week", "month", "year"]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "results",
+          "type": "array",
+          "description": "搜索结果对象数组",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {"type": "string"},
+              "url": {"type": "string"},
+              "snippet": {"type": "string"},
+              "relevance_score": {"type": "number"}
+            }
+          }
+        },
+        {
+          "name": "total_found",
+          "type": "integer",
+          "description": "可用结果总数"
+        }
+      ],
+      "error_conditions": [
+        "查询格式无效",
+        "网络超时",
+        "API 超出速率限制",
+        "未找到结果",
+        "服务不可用"
+      ],
+      "side_effects": [
+        "会记录搜索查询用于分析",
+        "可能会临时缓存结果"
+      ],
+      "idempotent": true,
+      "rate_limits": {
+        "requests_per_minute": 60,
+        "requests_per_hour": 1000,
+        "burst_limit": 10
+      },
+      "dependencies": [
+        "search_api_service",
+        "content_filter_service"
+      ],
+      "examples": [
+        {
+          "description": "基础网页搜索",
+          "input": {
+            "query": "机器学习算法",
+            "limit": 5
+          },
+          "expected_output": {
+            "results": [
+              {
+                "title": "机器学习算法简介",
+                "url": "https://example.com/ml-intro",
+                "snippet": "机器学习算法是一类从数据中学习模式的计算方法……",
+                "relevance_score": 0.95
+              }
+            ],
+            "total_found": 1250
+          }
+        }
+      ],
+      "security_requirements": [
+        "查询内容清洗",
+        "按用户限流",
+        "内容过滤"
+      ]
+    },
+    {
+      "name": "data_analyzer",
+      "purpose": "分析结构化数据，并生成统计洞察、趋势和可视化结果",
+      "category": "data",
+      "inputs": [
+        {
+          "name": "data",
+          "type": "object",
+          "description": "需要分析的 JSON 格式结构化数据",
+          "required": true,
+          "properties": {
+            "columns": {"type": "array"},
+            "rows": {"type": "array"}
+          }
+        },
+        {
+          "name": "analysis_type",
+          "type": "string",
+          "description": "要执行的分析类型",
+          "required": true,
+          "enum": ["descriptive", "correlation", "trend", "distribution", "outlier_detection"]
+        },
+        {
+          "name": "target_column",
+          "type": "string",
+          "description": "分析时重点关注的主列",
+          "required": false
+        },
+        {
+          "name": "include_visualization",
+          "type": "boolean",
+          "description": "是否生成可视化数据",
+          "required": false,
+          "default": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "insights",
+          "type": "array",
+          "description": "分析洞察与发现组成的数组"
+        },
+        {
+          "name": "statistics",
+          "type": "object",
+          "description": "统计指标与度量结果"
+        },
+        {
+          "name": "visualization_data",
+          "type": "object",
+          "description": "用于生成可视化的数据格式"
+        }
+      ],
+      "error_conditions": [
+        "数据格式无效",
+        "数据点不足",
+        "缺少必需列",
+        "数据类型不匹配",
+        "分析超时"
+      ],
+      "side_effects": [
+        "可能会创建临时分析文件",
+        "会记录分析参数以便后续优化"
+      ],
+      "idempotent": true,
+      "rate_limits": {
+        "requests_per_minute": 30,
+        "requests_per_hour": 500,
+        "burst_limit": 5
+      },
+      "dependencies": [
+        "statistics_engine",
+        "visualization_service"
+      ],
+      "examples": [
+        {
+          "description": "基础描述性分析",
+          "input": {
+            "data": {
+              "columns": ["age", "salary", "department"],
+              "rows": [
+                [25, 50000, "engineering"],
+                [30, 60000, "engineering"],
+                [28, 55000, "marketing"]
+              ]
+            },
+            "analysis_type": "descriptive",
+            "target_column": "salary"
+          },
+          "expected_output": {
+            "insights": [
+              "平均工资为 55,000 美元",
+              "工资范围为 50,000 至 60,000 美元",
+              "工程部门的平均工资更高"
+            ],
+            "statistics": {
+              "mean": 55000,
+              "median": 55000,
+              "std_dev": 5000
+            }
+          }
+        }
+      ],
+      "security_requirements": [
+        "数据匿名化",
+        "访问控制校验"
+      ]
+    },
+    {
+      "name": "document_processor",
+      "purpose": "处理并提取多种文档格式中的信息，包括 PDF、Word 文档和纯文本",
+      "category": "file",
+      "inputs": [
+        {
+          "name": "document_url",
+          "type": "string",
+          "description": "要处理的文档 URL 或路径",
+          "required": true,
+          "pattern": "^(https?://|file://|/)"
+        },
+        {
+          "name": "processing_mode",
+          "type": "string",
+          "description": "文档的处理方式",
+          "required": false,
+          "default": "full_text",
+          "enum": ["full_text", "summary", "key_points", "metadata_only"]
+        },
+        {
+          "name": "output_format",
+          "type": "string",
+          "description": "期望的输出格式",
+          "required": false,
+          "default": "json",
+          "enum": ["json", "markdown", "plain_text"]
+        },
+        {
+          "name": "language_detection",
+          "type": "boolean",
+          "description": "是否检测文档语言",
+          "required": false,
+          "default": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "content",
+          "type": "string",
+          "description": "提取并处理后的文档内容"
+        },
+        {
+          "name": "metadata",
+          "type": "object",
+          "description": "文档元数据，包括作者、创建日期等"
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "description": "检测到的文档语言"
+        },
+        {
+          "name": "word_count",
+          "type": "integer",
+          "description": "文档总词数"
+        }
+      ],
+      "error_conditions": [
+        "文档不存在",
+        "不支持的文件格式",
+        "文档损坏或不可读",
+        "无访问权限",
+        "文档过大"
+      ],
+      "side_effects": [
+        "可能会临时下载并缓存文档",
+        "会创建处理日志以便调试"
+      ],
+      "idempotent": true,
+      "rate_limits": {
+        "requests_per_minute": 20,
+        "requests_per_hour": 300,
+        "burst_limit": 3
+      },
+      "dependencies": [
+        "document_parser_service",
+        "language_detection_service",
+        "file_storage_service"
+      ],
+      "examples": [
+        {
+          "description": "处理 PDF 文档并提取全文",
+          "input": {
+            "document_url": "https://example.com/research-paper.pdf",
+            "processing_mode": "full_text",
+            "output_format": "markdown"
+          },
+          "expected_output": {
+            "content": "# 研究论文标题\n\n摘要：本文讨论了……",
+            "metadata": {
+              "author": "Dr. Smith",
+              "creation_date": "2024-01-15",
+              "pages": 15
+            },
+            "language": "en",
+            "word_count": 3500
+          }
+        }
+      ],
+      "security_requirements": [
+        "URL 校验",
+        "文件类型校验",
+        "恶意软件扫描",
+        "访问控制执行"
+      ]
+    },
+    {
+      "name": "notification_sender",
+      "purpose": "通过邮件、短信和 webhook 等多种渠道发送通知",
+      "category": "communication",
+      "inputs": [
+        {
+          "name": "recipients",
+          "type": "array",
+          "description": "收件人标识列表",
+          "required": true,
+          "min_items": 1,
+          "max_items": 100,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$|^\\+?[1-9]\\d{1,14}$"
+          }
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "description": "要发送的消息内容",
+          "required": true,
+          "min_length": 1,
+          "max_length": 10000
+        },
+        {
+          "name": "channel",
+          "type": "string",
+          "description": "使用的通信渠道",
+          "required": false,
+          "default": "email",
+          "enum": ["email", "sms", "webhook", "push"]
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "description": "消息优先级",
+          "required": false,
+          "default": "normal",
+          "enum": ["low", "normal", "high", "urgent"]
+        },
+        {
+          "name": "template_id",
+          "type": "string",
+          "description": "可选的格式模板 ID",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "delivery_status",
+          "type": "object",
+          "description": "每个收件人的消息投递状态"
+        },
+        {
+          "name": "message_id",
+          "type": "string",
+          "description": "已发送消息的唯一标识"
+        },
+        {
+          "name": "delivery_timestamp",
+          "type": "string",
+          "description": "消息发送时间的 ISO 时间戳"
+        }
+      ],
+      "error_conditions": [
+        "收件人格式无效",
+        "消息过长",
+        "渠道服务不可用",
+        "认证失败",
+        "该渠道已达到速率限制"
+      ],
+      "side_effects": [
+        "会向收件人发送真实通知",
+        "会记录投递尝试与结果",
+        "会更新投递统计数据"
+      ],
+      "idempotent": false,
+      "rate_limits": {
+        "requests_per_minute": 100,
+        "requests_per_hour": 2000,
+        "burst_limit": 20
+      },
+      "dependencies": [
+        "email_service",
+        "sms_service",
+        "webhook_service"
+      ],
+      "examples": [
+        {
+          "description": "发送邮件通知",
+          "input": {
+            "recipients": ["user@example.com"],
+            "message": "你的报告已经完成，现已可供审阅。",
+            "channel": "email",
+            "priority": "normal"
+          },
+          "expected_output": {
+            "delivery_status": {
+              "user@example.com": "delivered"
+            },
+            "message_id": "msg_12345",
+            "delivery_timestamp": "2024-01-15T10:30:00Z"
+          }
+        }
+      ],
+      "security_requirements": [
+        "收件人校验",
+        "消息内容过滤",
+        "按用户限流",
+        "投递确认"
+      ]
+    },
+    {
+      "name": "task_scheduler",
+      "purpose": "在智能体系统内调度和管理延迟执行或周期性执行的任务",
+      "category": "compute",
+      "inputs": [
+        {
+          "name": "task_definition",
+          "type": "object",
+          "description": "需要被调度的任务定义",
+          "required": true,
+          "properties": {
+            "action": {"type": "string"},
+            "parameters": {"type": "object"},
+            "retry_policy": {"type": "object"}
+          }
+        },
+        {
+          "name": "schedule",
+          "type": "object",
+          "description": "任务的调度参数",
+          "required": true,
+          "properties": {
+            "type": {"type": "string", "enum": ["once", "recurring"]},
+            "execute_at": {"type": "string"},
+            "recurrence_pattern": {"type": "string"}
+          }
+        },
+        {
+          "name": "priority",
+          "type": "integer",
+          "description": "任务优先级（1-10，数值越高越紧急）",
+          "required": false,
+          "default": 5,
+          "minimum": 1,
+          "maximum": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "task_id",
+          "type": "string",
+          "description": "已调度任务的唯一标识"
+        },
+        {
+          "name": "next_execution",
+          "type": "string",
+          "description": "下一次计划执行时间的 ISO 时间戳"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "description": "已调度任务的当前状态"
+        }
+      ],
+      "error_conditions": [
+        "调度格式无效",
+        "指定了过去的执行时间",
+        "任务队列已满",
+        "任务定义无效",
+        "调度服务不可用"
+      ],
+      "side_effects": [
+        "会在系统中创建计划任务",
+        "可能会消耗系统资源来存储任务",
+        "会更新调度相关指标"
+      ],
+      "idempotent": false,
+      "rate_limits": {
+        "requests_per_minute": 50,
+        "requests_per_hour": 1000,
+        "burst_limit": 10
+      },
+      "dependencies": [
+        "task_scheduler_service",
+        "task_executor_service"
+      ],
+      "examples": [
+        {
+          "description": "调度一次性报告生成任务",
+          "input": {
+            "task_definition": {
+              "action": "generate_report",
+              "parameters": {
+                "report_type": "monthly_summary",
+                "recipients": ["manager@example.com"]
+              }
+            },
+            "schedule": {
+              "type": "once",
+              "execute_at": "2024-02-01T09:00:00Z"
+            },
+            "priority": 7
+          },
+          "expected_output": {
+            "task_id": "task_67890",
+            "next_execution": "2024-02-01T09:00:00Z",
+            "status": "scheduled"
+          }
+        }
+      ],
+      "security_requirements": [
+        "任务定义校验",
+        "调度操作的用户授权校验",
+        "资源限制执行"
+      ]
+    }
+  ]
+}

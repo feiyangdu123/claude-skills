@@ -1,0 +1,39 @@
+graph TB
+    User[用户] -->|研报需求| Supervisor[Supervisor Agent<br/>总协调者]
+
+    Supervisor -->|1. 检索任务| KB[Knowledge Base Agent<br/>知识库检索专家]
+    KB -->|本地数据报告<br/>+ 知识缺口清单| Supervisor
+
+    Supervisor -->|2. 补充数据任务| Web[Web Research Agent<br/>网络研究专家]
+    Web -->|补充数据报告<br/>+ 信源列表| Supervisor
+
+    Supervisor -->|3. 图表提取任务| Image[Image Extraction Agent<br/>图表提取专家]
+    Image -->|图表库<br/>20-30 张图表| Supervisor
+
+    Supervisor -->|4. 写作任务<br/>完整数据包| Writer[Writing Agent<br/>写作专家]
+    Writer -->|5 章初稿<br/>约 3 万字| Supervisor
+
+    Supervisor -->|5. 审核任务| QC[Quality Control Agent<br/>质量审核专家]
+    QC -->|审核报告<br/>+ 修改建议| Supervisor
+
+    Supervisor -->|6. 整合任务<br/>修订内容 + 图表| Integration[Integration Agent<br/>整合专家]
+    Integration -->|最终研报<br/>Markdown + PDF| Supervisor
+
+    Supervisor -->|交付研报| User
+
+    %% 数据源
+    VectorDB[(向量数据库<br/>本地知识库)] -.->|检索| KB
+    FinAPI[金融数据 API<br/>Wind/同花顺] -.->|获取数据| Web
+    SearchAPI[搜索 API<br/>Google/Bing] -.->|搜索| Web
+    LLM[大语言模型<br/>Claude/GPT-4] -.->|生成内容| Writer
+
+    %% 样式定义
+    classDef supervisor fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef specialist fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef datasource fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,stroke-dasharray: 5 5
+    classDef user fill:#fff3e0,stroke:#e65100,stroke-width:2px
+
+    class Supervisor supervisor
+    class KB,Web,Image,Writer,QC,Integration specialist
+    class VectorDB,FinAPI,SearchAPI,LLM datasource
+    class User user
