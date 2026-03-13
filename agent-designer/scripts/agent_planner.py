@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 """
-Agent Planner - Multi-Agent System Architecture Designer
+Agent Planner - 多智能体系统架构规划器
 
-Given a system description (goal, tasks, constraints, team size), designs a multi-agent
-architecture: defines agent roles, responsibilities, capabilities needed, communication
-topology, tool requirements. Generates architecture diagram (Mermaid).
+它会先读取一份结构化的系统需求，例如目标、任务、限制条件、团队规模等，
+再根据代码里预先定义好的架构模式、角色分工规则、通信方式和工具配置规则，
+自动判断更适合采用哪种多智能体架构。
 
-Input: system requirements JSON
-Output: agent architecture + role definitions + Mermaid diagram + implementation roadmap
+然后把结果整理成一套清晰的设计方案，包括：
+- 需要哪些 agent
+- 每个 agent 分别负责什么
+- 需要具备哪些能力和工具
+- agent 之间怎么协作和通信
+
+最后会把这份结构化架构结果转换成 Mermaid 文本，同步产出“可视化架构图”。
+
+输入：系统需求 JSON
+输出：智能体架构方案 + 角色定义 + Mermaid 架构图 + 实施路线图
 """
 
 import json
