@@ -11,7 +11,7 @@ description: >-
 此 skill 提供 3 个 Python 工具：
 
 ### 1. Agent Planner (`scripts/agent_planner.py`)
-根据系统需求，参考[references/agent_architecture_patterns.md]，设计多智能体架构
+根据系统需求，参考 `references/agent_architecture_patterns.md`，设计多智能体架构。
 
 **使用方式：**
 ```bash
@@ -22,7 +22,7 @@ python scripts/agent_planner.py <assets/sample_system_requirements.json> -o <out
 **输出：** 架构设计 JSON、Mermaid 图、实施路线图
 
 ### 2. Tool Schema Generator (`scripts/tool_schema_generator.py`)
-生成标准化的工具 Schema，参考[references/tool_design_best_practices.md]，兼容 OpenAI 和 Anthropic 格式。
+生成标准化的工具 Schema，参考 `references/tool_design_best_practices.md`，兼容 OpenAI 和 Anthropic 格式。
 
 **使用方式：**
 ```bash
@@ -33,7 +33,7 @@ python scripts/tool_schema_generator.py <assets/sample_tool_descriptions.json> -
 **输出：** 完整 Schema、OpenAI 格式、Anthropic 格式、校验规则、使用示例
 
 ### 3. Agent Evaluator (`scripts/agent_evaluator.py`)
-分析执行日志，识别性能瓶颈和优化机会，参考[references/evaluation_methodology.md]。
+分析执行日志，识别性能瓶颈和优化机会，参考 `references/evaluation_methodology.md`。
 
 **使用方式：**
 ```bash
