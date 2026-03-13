@@ -6,48 +6,38 @@ description: >-
 
 # Agent Designer - 多智能体系统架构设计工具
 
-## 何时使用此 Skill
-
-当用户提到以下需求时使用此 skill：
-- 设计多智能体系统架构
-- 选择合适的架构模式
-- 生成工具 Schema
-- 评估智能体系统性能
-- 优化多智能体协作流程
-- 规划智能体角色和职责分工
-
 ## 核心工具
 
 此 skill 提供 3 个 Python 工具：
 
-### 1. Agent Planner (`agent_planner.py`)
-根据系统需求设计多智能体架构，自动选择最佳架构模式。
+### 1. Agent Planner (`scripts/agent_planner.py`)
+根据系统需求，参考[references/agent_architecture_patterns.md]，设计多智能体架构
 
 **使用方式：**
 ```bash
-python agent_planner.py <requirements.json> -o <output_prefix>
+python scripts/agent_planner.py <assets/sample_system_requirements.json> -o <output_prefix>
 ```
 
 **输入：** 系统需求 JSON（目标、任务、约束、团队规模）
 **输出：** 架构设计 JSON、Mermaid 图、实施路线图
 
-### 2. Tool Schema Generator (`tool_schema_generator.py`)
-生成标准化的工具 Schema，兼容 OpenAI 和 Anthropic 格式。
+### 2. Tool Schema Generator (`scripts/tool_schema_generator.py`)
+生成标准化的工具 Schema，参考[references/tool_design_best_practices.md]，兼容 OpenAI 和 Anthropic 格式。
 
 **使用方式：**
 ```bash
-python tool_schema_generator.py <tool_descriptions.json> -o <output_prefix>
+python scripts/tool_schema_generator.py <assets/sample_tool_descriptions.json> -o <output_prefix>
 ```
 
 **输入：** 工具描述 JSON
 **输出：** 完整 Schema、OpenAI 格式、Anthropic 格式、校验规则、使用示例
 
-### 3. Agent Evaluator (`agent_evaluator.py`)
-分析执行日志，识别性能瓶颈和优化机会。
+### 3. Agent Evaluator (`scripts/agent_evaluator.py`)
+分析执行日志，识别性能瓶颈和优化机会，参考[references/evaluation_methodology.md]。
 
 **使用方式：**
 ```bash
-python agent_evaluator.py <execution_logs.json> -o <output_prefix>
+python scripts/agent_evaluator.py <assets/sample_execution_logs.json> -o <output_prefix>
 ```
 
 **输入：** 执行日志 JSON
