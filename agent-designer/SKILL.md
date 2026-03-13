@@ -58,7 +58,7 @@ python agent_evaluator.py <execution_logs.json> -o <output_prefix>
 ### 示例 1：设计研究助手系统
 
 ```bash
-# 1. 创建需求文件（或使用 assets/sample_system_requirements.json）
+# 1. 创建需求文件（参考 assets/sample_system_requirements.json）
 # 2. 运行 planner
 python scripts/agent_planner.py assets/sample_system_requirements.json -o research_system
 
@@ -71,7 +71,7 @@ python scripts/agent_planner.py assets/sample_system_requirements.json -o resear
 ### 示例 2：生成搜索工具 Schema
 
 ```bash
-# 1. 创建工具描述（或使用 assets/sample_tool_descriptions.json）
+# 1. 创建工具描述（参考 assets/sample_tool_descriptions.json）
 # 2. 运行 generator
 python scripts/tool_schema_generator.py assets/sample_tool_descriptions.json -o search_tools
 
@@ -84,7 +84,7 @@ python scripts/tool_schema_generator.py assets/sample_tool_descriptions.json -o 
 ### 示例 3：评估系统性能
 
 ```bash
-# 1. 收集执行日志（或使用 assets/sample_execution_logs.json）
+# 1. 收集执行日志（参考 assets/sample_execution_logs.json）
 # 2. 运行 evaluator
 python scripts/agent_evaluator.py assets/sample_execution_logs.json -o performance_report
 
