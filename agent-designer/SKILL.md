@@ -1,11 +1,7 @@
 ---
 name: "agent-designer"
 description: >-
-  Design and architect multi-agent AI systems. Use when the user wants to:
-  design agent architectures, plan multi-agent systems, generate tool schemas,
-  evaluate agent performance, choose architecture patterns (supervisor/swarm/pipeline),
-  or optimize agent system performance. Provides structured approach for building
-  robust, scalable AI agent systems with proper communication, orchestration, and evaluation.
+  设计和构建多智能体 AI 系统。当用户需要以下能力时使用：设计智能体架构、规划多智能体系统、生成工具 schema、评估智能体性能、选择架构模式，或优化智能体系统性能。
 ---
 
 # Agent Designer - 多智能体系统架构设计工具
@@ -14,8 +10,8 @@ description: >-
 
 当用户提到以下需求时使用此 skill：
 - 设计多智能体系统架构
-- 选择合适的架构模式（Supervisor、Swarm、Pipeline 等）
-- 生成工具 Schema（OpenAI/Anthropic 格式）
+- 选择合适的架构模式
+- 生成工具 Schema
 - 评估智能体系统性能
 - 优化多智能体协作流程
 - 规划智能体角色和职责分工
